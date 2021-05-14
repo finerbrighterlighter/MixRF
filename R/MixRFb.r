@@ -108,11 +108,12 @@ MixRFb <- function(Y, x, random, data, initialRandomEffects=0,
       if(verbose) print(c(iterations0,iterations,LogLik))
     }
 
-    eta = pred + AllEffects
-    mu = 1/(1+exp(-eta))
-    y = eta + (Y-mu)/(mu*(1-mu))
-    AdjustedTarget <- y - AllEffects
-    weights = as.vector(mu*(1-mu))
+    neweta  <-pred + AllEffects
+    newmu <- 1/(1+exp(-neweta))
+    newY <- (newmu>=0.5)
+    newy <- eta + (newY-newmu)/(newmu*(1-newmu))
+    AdjustedTarget <- newy - AllEffects
+    weights = as.vector(newmu*(1-newmu))
 
     print(c(iter = iterations0, maxEtaChange=max(abs(eta-oldEta))))
 
